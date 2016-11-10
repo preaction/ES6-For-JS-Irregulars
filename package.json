@@ -1,0 +1,15 @@
+{
+  "name": "my-project",
+  "version": "1.0.0",
+  "scripts": {
+    "build": "browserify src/* -o app.js -t [ babelify ]"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.0.0",
+    "babel-plugin-transform-es2015-modules-commonjs": "^6.18.0",
+    "babel-polyfill": "^6.0.0",
+    "babel-preset-latest": "^6.0.0",
+    "babelify": "^7.3.0",
+    "browserify": "^13.1.1"
+  }
+}
