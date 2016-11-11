@@ -286,11 +286,114 @@ This makes it
 
 ### Arrow Functions
 
+This is my favorite thing in new JavaScript, and not just because
+there's less typing. JavaScript is massively callback-oriented:
+Everything async requires at least one callback. Often, in a series of
+async operations, you have callbacks calling callbacks calling
+callbacks. It gets to be a lot of small, anonymous functions.
+
+Arrow functions make callbacks a lot easier:
+
+    var add = function ( x, y ) { return x + y };
+
+    let add =          ( x, y ) =>       x + y;
+
+We don't need the word `function`, we don't need the curly braces,
+because it's a single expression, and we don't need `return`!
+
 #### Arrow Function Binding
 
-promises
+But the best part is that arrow functions do not affect the context
+of the code. `this` is still the same as it was when the callback was
+created. This prevents us from having to save our scope variable to some
+other variable like `self` or `that`:
+
+    var self = this;
+    this.addEventListener( 'click', function () {
+        console.log( 'clicked once, removing...' );
+        self.removeEventListener( 'click' );
+    } );
+
+    this.addEventListener( 'click',          () => {
+        console.log( 'clicked once, removing...' );
+        this.removeEventListener( 'click' );
+    } );
+
+This pattern is such a huge source of headaches for new JS users that
+I'm infinitely glad that there is finally a better way.
+
+### Promises
+
+Promises are another way to make callbacks easier to deal with,
+especially for async requests that have a single response:
+
+    function get( url, cb ) {
+        var request = new XMLHttpRequest();
+
+        request.addEventListener( 'load', function () {
+            cb.call        ( this.responseText );
+        } );
+        request.open( "GET", url );
+        request.send();
+
+    }
+
+    // Fetch three things in order
+    get( 'http://example.com', function ( response ) {
+        get( 'http://example.net', function ( response ) {
+            get( 'http://example.org', function ( response ) {
+                console.log( 'Done!' );
+            } );
+        } );
+    } );
+
+    function get( url     ) {
+        var request = new XMLHttpRequest();
+        var promise = new Promise();
+        request.addEventListener( 'load', function () {
+            promise.resolve( this.responseText );
+        } );
+        request.open( "GET", url );
+        request.send();
+        return promise;
+    }
+
+    // Fetch three things in order
+    get( 'http://example.com' )
+        .then( () => get( 'http://example.net' ) )
+        .then( () => get( 'http://example.org' ) );
+
+Promises encapsulate a request and hold on to the response (the
+resolution). Order doesn't matter, which fixes another common misstep by
+novice async programmers:
+
+    var request = new XMLHttpRequest();
+
+    request.open( "GET", url );
+    request.send();
+
+    request.addEventListener( 'load', function () { /* ... */ } );
+
+Here, it is possible that the `send()` finishes immediately, and the
+`load` event gets fired _before we added our listener!_ With Promise,
+calling `then()` after the promise has been resolved results in the same
+behavior, just a little faster:
+
+    var promise = new Promise();
+    promise.then( ( response ) => console.log( response ) );
+    promise.resolve( "response" );
+
+
+    var promise = new Promise();
+
+    promise.resolve( "response" );
+    promise.then( ( response ) => console.log( response ) );
 
 ## Objects
+
+JavaScript objects are unique. But now we've got some much-needed
+features that make them more functional and easier to use for those
+schooled in `class`ic OO programming.
 
 super
 proxy objects
@@ -318,14 +421,18 @@ extended core objects
 * new String methods
 
 
-How to use ES6 now
+## How to use ES6 now
+
+The JavaScript ecosystem has some tools that will let us use ES6
+features in web browsers that do not yet support ES6 natively!
+
+For this, we need to install `nodejs` and `npm`. I'll leave that up to
+you, Your Milage May Vary based on your OS. For me, it was pretty easy
+as I use Homebrew for OSX and just did `brew install nodejs npm`
+
 * BabelJS
 * NPM
 * es2015
 * babel-polyfill
 
-
----
-
-What the fuck is Symbol?
 
