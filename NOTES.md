@@ -282,7 +282,8 @@ in to the full implications of that "pseudo" there):
         return sum;
     }
 
-This makes it
+This makes it more difficult when you've got some required arguments and
+other optional arguments.
 
 ### Arrow Functions
 
@@ -430,9 +431,76 @@ For this, we need to install `nodejs` and `npm`. I'll leave that up to
 you, Your Milage May Vary based on your OS. For me, it was pretty easy
 as I use Homebrew for OSX and just did `brew install nodejs npm`
 
-* BabelJS
-* NPM
-* es2015
-* babel-polyfill
+Then I needed to configure `npm` to install `babel` and `browserify`.
 
+Babel is the ES6 to ES5 compiler system. It's much, much more than that,
+too much more than that, but that is what we're using it for. This gets
+us our ES6 syntaxes.
+
+Browserify is how we get our ES5 from Babel to work in a browser. This
+includes combining all of our individual modules into one file, and sets
+up the right functions for loading them so that it all comes together
+and works as we expect.
+
+So, first we need to define our project in a file called `project.json`:
+
+    {
+      "name": "my-project",
+      "version": "1.0.0"
+    }
+
+Then we can install babel and our dependencies and tell npm to update
+our package.json for us:
+
+    $ npm install --save-dev babel-cli babelify browserify
+
+Once these are installed, npm will add them to our package.json:
+
+    {
+      "name": "my-project",
+      "version": "1.0.0",
+      "devDependencies": {
+        "babel-cli": "^6.0.0",
+        "babelify": "^7.3.0",
+        "browserify": "^13.1.1"
+      }
+    }
+
+By default, babel does nothing. To make it do something, we need to
+configure it, and install more plugins. The easiest thing to do is to
+install the `latest` bundle. And we'll need the `polyfill` to ensure
+proper support of Promises and other expected functions.
+
+    $ npm install --save-dev babel-polyfill babel-preset-latest
+
+Finally, we need a way to make ES6 modules work. Since there are lots of
+ways, we'll install the one that babeljs recommends as a default,
+CommonJS:
+
+    $ npm install --save-dev babel-plugin-transform-es2015-modules-commonjs
+
+Now with all our stuff installed, we can configure babel using a file
+called `.babelrc`:
+
+    {
+        "presets": ["latest"],
+        "plugins": ["transform-es2015-modules-commonjs"]
+    }
+
+We'll put all our source code in a "src/" directory, and then
+compile our software using browserify:
+
+    $ browserify src/* -o app.js -t [ babelify ]
+
+This creates a file called "app.js" in our root directory that we can
+load in our web browser!
+
+To make this a bit easier, we can create an `npm script` that will build
+our software by adding this section to our `package.json`.
+
+    "scripts": {
+        "build": "browserify src/* -o app.js -t [ babelify ]"
+    },
+
+Now we can run `npm run build` to build our software.
 
