@@ -400,12 +400,39 @@ super
 proxy objects
 Subclass built-ins like Array, Date, and Element
 classes
+
+var Person = Object.create( {
+    name: 'Default Defaulterson',
+} );
+
+var doug = new Person();
+doug.name = "Doug Bell";
+
+var Employee = Object.create( { }, Person );
+Employee.prototype.salary = function () { /* Fetch salary maybe I don't know */ };
+
+class Person {
+    name,
+}
+
+class Employee extends Person {
+    salary( ) { /* doop doop */ }
+}
+
 modules
 
 ## DOM
 
 querySelector / querySelectorAll
 
+$( '.foo' );
+document.querySelectorAll( '.foo' );
+
+$( '.foo' ).first();
+document.querySelector( '.foo' );
+
+var elem = document.getElementById( 'bar' );
+elem.querySelector( '.foo' );
 
 ## Not covered
 

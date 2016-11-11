@@ -106,45 +106,68 @@ There is no 4
 
 ---
 
-    var ary = [ 0, 1, 2, 3 ];
-    for ( var i = 0; i < ary.length; i++ ) {
+```
+var ary = [ 0, 1, 2, 3 ];
+for ( var i = 0; i < ary.length; i++ ) {
 
-            setTimeout(
-                function () {
-                    console.log( i );
-                },
-                1000 * i
-            );
+        setTimeout(
+            function () {
+                console.log( i );
+            },
+            1000 * i
+        );
 
-    }
-
----
-
-    var ary = [ 0, 1, 2, 3 ];
-    for ( var i = 0; i < ary.length; i++ ) {
-        (function ( i ) {
-            setTimeout(
-                function () {
-                    console.log( i );
-                },
-                1000 * i
-            );
-        })( i ); // pass in the loop var to avoid closure problem
-    }
+}
+```
 
 ---
 
-    var ary = [ 0, 1, 2, 3 ];
-    for ( let i = 0; i < ary.length; i++ ) {
+```
+4
+4
+4
+4
+```
 
-            setTimeout(
-                function () {
-                    console.log( i );
-                },
-                1000 * i
-            );
+---
 
-    }
+```
+var ary = [ 0, 1, 2, 3 ];
+for ( var i = 0; i < ary.length; i++ ) {
+    (function ( i ) {
+        setTimeout(
+            function () {
+                console.log( i );
+            },
+            1000 * i
+        );
+    })( i ); // pass in the loop var to avoid closure problem
+}
+```
+
+---
+
+```
+0
+1
+2
+3
+```
+---
+
+```
+var ary = [ 0, 1, 2, 3 ];
+for ( let i = 0; i < ary.length; i++ ) {
+
+        setTimeout(
+            function () {
+                console.log( i );
+            },
+            1000 * i
+        );
+
+}
+```
 
 ------
 
@@ -156,8 +179,10 @@ There is no 4
 
 ---
 
-    const PI = 3.1415925;
-    const E = 2.71828;
+```
+const PI = 3.1415925;
+const E = 2.71828;
+```
 
 ------
 
@@ -169,13 +194,17 @@ There is no 4
 
 ---
 
-    var name = "Doug";
-    console.log( "Hello, " + name );
+```
+var name = "Doug";
+console.log( "Hello, " + name );
+```
 
 ---
 
-    var name = "Doug";
-    var hello = `Hello, ${name}`;
+```
+var name = "Doug";
+var hello = `Hello, ${name}`;
+```
 
 ---
 
@@ -183,7 +212,9 @@ There is no 4
 
 ---
 
-    console.log( `2π = ${ Math.PI * 2 }` );
+```
+console.log( `2π = ${ Math.PI * 2 }` );
+```
 
 Also, Unicode!
 
@@ -193,8 +224,10 @@ Also, Unicode!
 
 ---
 
-    console.log( `This is a string
-        on multiple lines` );
+```
+console.log( `This is a string
+    on multiple lines` );
+```
 
 ------
 
@@ -214,15 +247,19 @@ Also, Unicode!
 
 ---
 
-    var calc = {
-        add: function add( x, y ) { return x+y }
-    };
+```
+var calc = {
+    add: function add( x, y ) { return x+y }
+};
+```
 
 ---
 
-    var calc = {
-                      add( x, y ) { return x+y }
-    };
+```
+var calc = {
+                  add( x, y ) { return x+y }
+};
+```
 
 ---
 
@@ -230,21 +267,25 @@ Also, Unicode!
 
 ---
 
-    var   PI = 3.1415925;
-    var   E = 2.71623;
-    var numbers = {
-        PI: PI,
-        E:  E
-    };
+```
+var   PI = 3.1415925;
+var   E = 2.71623;
+var numbers = {
+    PI: PI,
+    E:  E
+};
+```
 
 ---
 
-    const PI = 3.1415925;
-    const E = 2.71623;
-    let numbers = {
-            PI,
-            E
-    };
+```
+const PI = 3.1415925;
+const E = 2.71623;
+let numbers = {
+        PI,
+        E
+};
+```
 
 ---
 
@@ -252,19 +293,23 @@ Also, Unicode!
 
 ---
 
-    var Math = {
-        add: function add( x, y ) { return x + y },
-        PI: PI,
-        E:  E
-    };
+```
+var Math = {
+    add: function add( x, y ) { return x + y },
+    PI: PI,
+    E:  E
+};
+```
 
 ---
 
-    let Math = {
-                      add( x, y ) { return x+y }
-            PI,
-            E
-    };
+```
+let Math = {
+                  add( x, y ) { return x+y }
+        PI,
+        E
+};
+```
 
 ------
 
@@ -280,11 +325,13 @@ Also, Unicode!
 
 ---
 
-    let ary = [ 0, 1, 2, 3, 4 ];
-    let [ first, second ] = ary;
+```
+let ary = [ 0, 1, 2, 3, 4 ];
+let [ first, second ] = ary;
 
-    console.log( first );
-    console.log( second );
+console.log( first );
+console.log( second );
+```
 
 ---
 
@@ -292,8 +339,10 @@ Also, Unicode!
 
 ---
 
-    const FOO = Math.PI, BAR = Math.E;
-    const { "PI": FOO, "E": BAR } = Math;
+```
+const FOO = Math.PI, BAR = Math.E;
+const { "PI": FOO, "E": BAR } = Math;
+```
 
 ------
 
@@ -313,19 +362,23 @@ Also, Unicode!
 
 ---
 
-    let ary = [ 1, 2, 3, 4 ];
-    ary.foo = "bar"; // Arrays are objects and can have properties
-    for ( let i in ary ) {
-        console.log( i );
-    }
+```
+let ary = [ 1, 2, 3, 4 ];
+ary.foo = "bar"; // Arrays are objects and can have properties
+for ( let i in ary ) {
+    console.log( i );
+}
+```
 
 ---
 
-    1
-    2
-    3
-    4
-    foo // ???
+```
+1
+2
+3
+4
+foo // ???
+```
 
 ---
 
@@ -333,18 +386,22 @@ Also, Unicode!
 
 ---
 
-    let ary = [ 1, 2, 3, 4 ];
-    ary.foo = "bar"; // Arrays are objects and can have properties
-    for ( let i of ary ) {
-        console.log( i );
-    }
+```
+let ary = [ 1, 2, 3, 4 ];
+ary.foo = "bar"; // Arrays are objects and can have properties
+for ( let i of ary ) {
+    console.log( i );
+}
+```
 
 ---
 
-    1
-    2
-    3
-    4
+```
+1
+2
+3
+4
+```
 
 ------
 
@@ -356,9 +413,11 @@ Also, Unicode!
 
 ---
 
-    function pow( x, y=1 ) {
-        return Math.pow( x, y );
-    }
+```
+function pow( x, y=1 ) {
+    return Math.pow( x, y );
+}
+```
 
 ------
 
@@ -370,21 +429,25 @@ Also, Unicode!
 
 ---
 
-    function add( x, y ) {
-        return x + y;
-    }
-    let nums = [ 1, 2 ];
+```
+function add( x, y ) {
+    return x + y;
+}
+let nums = [ 1, 2 ];
 
-    console.log( add.apply(    nums ) );
+console.log( add.apply(    nums ) );
+```
 
 ---
 
-    function add( x, y ) {
-        return x + y;
-    }
-    let nums = [ 1, 2 ];
+```
+function add( x, y ) {
+    return x + y;
+}
+let nums = [ 1, 2 ];
 
-    console.log( add      ( ...nums ) );
+console.log( add      ( ...nums ) );
+```
 
 ------
 
@@ -392,23 +455,27 @@ Also, Unicode!
 
 ---
 
-    function sum( ) {
-        var sum = 0;
-        for ( var i = 0; i < arguments.length; i++ ) {
-            sum += arguments[i];
-        }
-        return sum;
+```
+function sum( ) {
+    var sum = 0;
+    for ( var i = 0; i < arguments.length; i++ ) {
+        sum += arguments[i];
     }
+    return sum;
+}
+```
 
 ---
 
-    function sum( ...numbers ) {
-        var sum = 0;
-        for ( var i = 0; i < numbers  .length; i++ ) {
-            sum += numbers  [i];
-        }
-        return sum;
+```
+function sum( ...numbers ) {
+    var sum = 0;
+    for ( var i = 0; i < numbers  .length; i++ ) {
+        sum += numbers  [i];
     }
+    return sum;
+}
+```
 
 ------
 
