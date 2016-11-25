@@ -469,7 +469,7 @@ includes combining all of our individual modules into one file, and sets
 up the right functions for loading them so that it all comes together
 and works as we expect.
 
-So, first we need to define our project in a file called `project.json`:
+So, first we need to define our project in a file called `package.json`:
 
     {
       "name": "my-project",
@@ -481,7 +481,7 @@ our package.json for us:
 
     $ npm install --save-dev babel-cli babelify browserify
 
-Once these are installed, npm will add them to our package.json:
+Once these are installed, npm will add them to our `package.json`:
 
     {
       "name": "my-project",
@@ -515,15 +515,16 @@ called `.babelrc`:
     }
 
 We'll put all our source code in a "src/" directory, and then
-compile our software using browserify:
+compile our software using browserify. Since we installed the browserify
+command locally in our "node_modules" directory, the easiest way to
+invoke it will be to use an "npm script".
 
-    $ browserify src/* -o app.js -t [ babelify ]
-
-This creates a file called "app.js" in our root directory that we can
-load in our web browser!
-
-To make this a bit easier, we can create an `npm script` that will build
-our software by adding this section to our `package.json`.
+npm scripts set up the environment correctly so you can run the
+locally-installed programs[1]. These scripts go in our `package.json`
+file under a new key called, `"scripts"`. We'll name our script
+`"build"` and run the `browserify` command with the appropriate
+arguments to read from `src/` and write to `app.js` using `babelify` to
+transform our ES6 code to browser-ready code.
 
     "scripts": {
         "build": "browserify src/* -o app.js -t [ babelify ]"
@@ -531,3 +532,11 @@ our software by adding this section to our `package.json`.
 
 Now we can run `npm run build` to build our software.
 
+    $ npm run build
+
+This creates a file called "app.js" in our root directory that we can
+load in our web browser!
+
+1: These programs are technically installed into `node_modules/.bin`,
+but just putting this directory into your `PATH` will only work as long
+as you `chdir` into the same directory as your `node_modules` directory.
