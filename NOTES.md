@@ -16,6 +16,10 @@
 * Object - Perl hash, Python dictionary
     * But also an Object
 
+## A Short History of JavaScript
+
+XXX
+
 ## Variables and Data Structures
 
 ### New variable declaration
@@ -106,86 +110,6 @@ expression:
     console.log( `2π = ${ Math.PI * 2 }` );
 
 (Also, JavaScript now supports Unicode better)
-
-#### Object shorthand
-
-If we're building an object from scratch using `{ ... }`, now we have
-a few shortcuts that make it less typing.
-
-##### Named functions
-
-If we're adding a function to an object, we don't need to say its name
-twice, and we don't even need to explicitly use the `function` keyword.
-
-Where previously we had to write this:
-
-    var calc = {
-        add: function add( x, y ) { return x+y }
-    };
-
-Now we can write this:
-
-    var calc = {
-                      add( x, y ) { return x+y }
-    };
-
-##### Member variables
-
-If we're adding some local variables as new members to our object, we
-also don't need to say their names twice.
-
-    var   PI = 3.1415925;
-    var   E = 2.71623;
-    var numbers = {
-        PI: PI,
-        E:  E
-    };
-
-Now becomes:
-
-    const PI = 3.1415925;
-    const E = 2.71623;
-    let numbers = {
-            PI,
-            E
-    };
-
-These two features combine to make objects less typing:
-
-    var Math = {
-        add: function add( x, y ) { return x + y },
-        PI: PI,
-        E:  E
-    };
-
-    let Math = {
-                      add( x, y ) { return x+y }
-            PI,
-            E
-    };
-
-#### Destructuring
-
-Destructuring allows you to reduce the number of steps to get at the
-important things inside arrays and objects.
-
-So, if you have a function that returns an array, and you only want the
-first two things:
-
-    let ary = [ 0, 1, 2, 3, 4 ];
-    let [ first, second ] = ary;
-
-    console.log( first );
-    console.log( second );
-
-But even more fun is destructuring objects, which allows us to quickly
-grab all the interesting properties out of an object.
-
-    const FOO = Math.PI, BAR = Math.E;
-    const { "PI": FOO, "E": BAR } = Math;
-
-This saves the constant `Math.PI` to the local `const FOO`, and `Math.E`
-to the local `const BAR`.
 
 #### Iterables
 
@@ -384,9 +308,7 @@ behavior, just a little faster:
     promise.then( ( response ) => console.log( response ) );
     promise.resolve( "response" );
 
-
     var promise = new Promise();
-
     promise.resolve( "response" );
     promise.then( ( response ) => console.log( response ) );
 
@@ -396,32 +318,288 @@ JavaScript objects are unique. But now we've got some much-needed
 features that make them more functional and easier to use for those
 schooled in `class`ic OO programming.
 
-super
-proxy objects
-Subclass built-ins like Array, Date, and Element
-classes
+### Classes
 
-var Person = Object.create( {
-    name: 'Default Defaulterson',
-} );
+The original JavaScript way to create classes was to create
+a constructor `function`. The constructor could define some properties,
+and then add object methods to the constructor function's `prototype`
+property:
 
-var doug = new Person();
-doug.name = "Doug Bell";
+    function Person( name ) {
 
-var Employee = Object.create( { }, Person );
-Employee.prototype.salary = function () { /* Fetch salary maybe I don't know */ };
+            // Define the "name" property of the object
+            this.name = name;
+    }
+    // Add a method to say the person's name
+    Person.prototype.sayName = function () {
+            console.log( this.name );
+    };
 
-class Person {
-    name,
-}
+Now we can use our "class" to create an object with the `new` keyword,
+and then use the `sayName()` method to say the person's name:
 
-class Employee extends Person {
-    salary( ) { /* doop doop */ }
-}
+    var doug = new Person( "Doug" );
+    doug.sayName();
+    // "Doug"
 
-modules
+Class (or `static`) methods go on the constructor function itself:
 
-## DOM
+    Person.birth = function ( parents ) {
+        var baby = new Person();
+        baby.parents = parents;
+        return baby;
+    };
+
+To extend a class, we create a new constructor function and assign our
+"superclass" to the new constructor function's `prototype`:
+
+    function Employee( name, salary ) {
+        Person.call( this, name ); // Superclass constructor
+        this.salary = salary;
+    }
+    // Inherit from the Person class
+    Employee.prototype = new Person(); // No name!?
+
+This approach has some problems: First, our constructor is a function
+like any other, which means you can accidentally call it as a function.
+It won't do what you expect, and it may even break things.
+
+    var lana = Person( "Lana" );
+    lana.sayName();
+    // Cannot read property "sayName" of undefined
+
+So we didn't get an object, but what did happen?
+
+    console.log( window.name );
+    // Lana
+
+The `name` property exists on the `window` object?! When a method is
+called without an object, or when a constructor is called without `new`,
+the `this` keyword refers to the "default object" (in browsers, the
+`window` object, in NodeJS, the `global` object). So, when we called our
+constructor as a function, we set the `name` property of the `window`
+object.
+
+ES5 added a way to fix this problem, and a few others, by doing `'use
+strict'` at the top of your file or function:
+
+    function Person( name ) {
+
+            'use strict';
+            // Define the "name" property of the object
+            this.name = name;
+    }
+
+Functions that run under `'use strict'` do not have a default `this` set
+to `window`, so trying to run this constructor as a function again
+results in an error:
+
+    var pete = Person( "Pete" );
+    // TypeError: Cannot set property 'name' of undefined
+
+Early JavaScript had another problem: Our `Employee` class's `prototype` is an
+instance of the `Person` class, but the `Person` constructor requires an
+argument that we can't give it! To fix this problem, ES5 added
+`Object.create()`, which changes our inherited class to:
+
+    function Employee( name, salary ) {
+        Person.call( this, name ); // Superclass constructor
+        this.salary = salary;
+    }
+    // Inherit from the Person class
+    Employee.prototype = Object.create( Person.prototype );
+    // Fix the "constructor" property
+    Employee.prototype.constructor = Employee;
+
+ES5 also introduced "property definitions", which allow us to declare
+properties as unwritable, or define functions that will be called when
+getting or setting a property. The syntax for it is kind of awkward,
+though...
+
+Let's make sure our Employee's salary can't be less than 0 through
+functions. We can use `Object.defineProperty` to create a "property
+definition". Each property definition can have `get` and `set`
+properties to define the getter and setter function for the property.
+
+    Object.defineProperty( Employee.prototype, "salary", {
+        get: function () {
+            return this._salary;
+        },
+        set: function ( newSalary ) {
+            if ( newSalary < 0 ) {
+                throw new Error( "Salary must be greater than 0" );
+            }
+            this._salary = newSalary;
+        }
+    } );
+
+ES6 adds a real `class` keyword which allows us to write all this in
+a more intuitive fashion. Under the hood, the `prototype` property and
+all its associated magic still exist, `class` just makes this easier to
+write with fewer things to remember.
+
+Here's our `Person` class again:
+
+    function Person( name ) {
+
+            'use strict';
+            // Define the "name" property of the object
+            this.name = name;
+    }
+    // Add a method to say the person's name
+    Person.prototype.sayName = function () {
+            console.log( this.name );
+    };
+    // Add a static method to birth new people
+    Person.birth = function ( parents ) {
+            var baby = new Person();
+            baby.parents = parents;
+            return baby;
+    };
+
+
+And now here's our `Person` class written using ES6 classes:
+
+    class    Person         {
+        constructor( name ) {
+
+            // Define the "name" property of the object
+            this.name = name;
+        }
+        // Add a method to say the person's name
+        sayName() {
+            console.log( this.name );
+        }
+        // Add a static method to birth new people
+        static birth( parents ) {
+            var baby = new Person();
+            baby.parents = parents;
+            return baby;
+        }
+    }
+
+Notice first that we have a lot less typing: All references to
+`prototype` are gone, and no need to introduce functions with the
+`function` keyword. We don't need to `'use strict'`, because all classes
+built with the `class` keyword are assumed to be strict.
+
+Our constructor is called simply `constructor`, and can only be used as
+a constructor:
+
+    var doug = new Person( "Doug" );
+    // OK
+
+    var doug = Person( "Doug" );
+    // TypeError: Class constructor Foo cannot be invoked without 'new'
+
+Class methods are now explicitly declared on the class using the
+`static` keyword, making them stand out.
+
+ES6 classes also make it easier to inherit from classes. Here's our
+`Employee` class again:
+
+XXX
+
+### `super`
+
+XXX
+
+### Object shorthand
+
+We can use the same syntax we use to build classes in every other object
+we build as well.
+
+#### Named functions
+
+If we're adding a function to an object, we don't need to say its name
+twice, and we don't even need to explicitly use the `function` keyword.
+
+Where previously we had to write this:
+
+    var calc = {
+        add: function add( x, y ) { return x+y }
+    };
+
+Now we can write this:
+
+    var calc = {
+                      add( x, y ) { return x+y }
+    };
+
+#### Member variables
+
+If we're adding some local variables as new members to our object, we
+also don't need to say their names twice.
+
+    var   PI = 3.1415925;
+    var   E = 2.71623;
+    var numbers = {
+        PI: PI,
+        E:  E
+    };
+
+Now becomes:
+
+    const PI = 3.1415925;
+    const E = 2.71623;
+    let numbers = {
+            PI,
+            E
+    };
+
+These two features combine to make objects less typing:
+
+    var Math = {
+        add: function add( x, y ) { return x + y },
+        PI: PI,
+        E:  E
+    };
+
+    let Math = {
+                      add( x, y ) { return x+y }
+            PI,
+            E
+    };
+
+## ES6 Modules
+
+One of the biggest limitations JavaScript has had is a lack of proper
+modules and namespaces. Sure, you can split your code into multiple
+files, and as long as you get the order right in the markup, everything
+will probably work out fine.
+
+XXX More about why ES6 modules
+
+Now we can be explicit about the relationship between our code files and
+the symbols within them, and we can load them in the right order
+automatically.
+
+    export default class Person {
+
+    }
+
+    exports
+
+XXX
+
+## Not covered
+
+* typed arrays (ArrayBuffer)
+* proxy objects
+* Subclass built-ins like Array, Date, and Element
+
+### New core objects
+
+* Map/WeakMap
+* Set/WeakSet
+
+### Extended core objects
+
+* new Array methods
+* new Math methods
+* new String methods
+
+### DOM
 
 querySelector / querySelectorAll
 
@@ -434,20 +612,28 @@ document.querySelector( '.foo' );
 var elem = document.getElementById( 'bar' );
 elem.querySelector( '.foo' );
 
-## Not covered
+### Destructuring
 
-typed arrays (ArrayBuffer)
+Destructuring allows you to reduce the number of steps to get at the
+important things inside arrays and objects.
 
+So, if you have a function that returns an array, and you only want the
+first two things:
 
-new core objects
-* Map/WeakMap
-* Set/WeakSet
+    let ary = [ 0, 1, 2, 3, 4 ];
+    let [ first, second ] = ary;
 
-extended core objects
-* new Array methods
-* new Math methods
-* new String methods
+    console.log( first );
+    console.log( second );
 
+But even more fun is destructuring objects, which allows us to quickly
+grab all the interesting properties out of an object.
+
+    const FOO = Math.PI, BAR = Math.E;
+    const { "PI": FOO, "E": BAR } = Math;
+
+This saves the constant `Math.PI` to the local `const FOO`, and `Math.E`
+to the local `const BAR`.
 
 ## How to use ES6 now
 
