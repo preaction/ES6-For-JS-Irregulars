@@ -709,18 +709,23 @@ npm scripts set up the environment correctly so you can run the
 locally-installed programs[1]. These scripts go in our `package.json`
 file under a new key called, `"scripts"`. We'll name our script
 `"build"` and run the `browserify` command with the appropriate
-arguments to read from `src/` and write to `app.js` using `babelify` to
-transform our ES6 code to browser-ready code.
+arguments to read from `src/` and write to `dist/app.js` using
+`babelify` to transform our ES6 code to browser-ready code.
 
     "scripts": {
-        "build": "browserify src/* -o app.js -t [ babelify ]"
+        "build": "browserify src/* -o dist/app.js -t [ babelify ]"
     },
 
-Now we can run `npm run build` to build our software.
+Finally, we need to make sure our directory structure exists:
+
+    $ mkdir src dist
+
+Now we can add some ES6 code to our "src/" directory and run `npm run
+build` to build our software.
 
     $ npm run build
 
-This creates a file called "app.js" in our root directory that we can
+This creates a file called "app.js" in our "dist/" directory that we can
 load in our web browser!
 
 1: These programs are technically installed into `node_modules/.bin`,
