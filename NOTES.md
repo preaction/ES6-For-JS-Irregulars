@@ -18,7 +18,33 @@
 
 ## A Short History of JavaScript
 
-XXX
+JavaScript was pitched as a way to interact with Java applets in the
+Netscape browser. In those halcyon days, it was thought that Java
+applets were going to be the next step in the evolution of the web.
+Unfortunately, the limitations of technology at the time ensured Java
+applets were a passing fad, but JavaScript stayed around.
+
+Shortly after its release, IE also implemented JavaScript (called
+JScript). This was at the height of the browser wars, and everything
+sucked. Rather than continue this forever, JavaScript was given to
+a standards body called Ecma.
+
+And like all other languages, JavaScript is evolving. In 1999, ECMA
+released the ECMAScript 3 standard, which shored up some of the
+ambiguities in the language and gave the browser vendors a baseline to
+work from. At this point, JavaScript got `try/catch` and regular
+expressions, both common standard features in modern programming
+languages.
+
+After a disastrous attempt at creating ECMAScript 4, which was
+completely incompatible, ECMAScript 5 was released in 2009. This version
+gave us `'use strict'`, which allowed us to prevent some unexpected and
+undesired behaviors, and JSON was added to the core language.
+
+But the version we're going to cover here is ECMAScript 6, released in
+2015. This was a massive upgrade to the language, with a lot of new
+features that everyone should be using on a daily basis. And, with the
+help
 
 ## Variables and Data Structures
 
@@ -162,11 +188,48 @@ XXX
 
 Now we can more easily have default parameters in our functions:
 
-XXX Old way?
+Previously we could achieve this by using `||` in the body of the
+function:
+
+    function pow( x, y ) {
+        y = y || 1;
+        return Math.pow( x, y );
+    }
+
+    pow( 2, 2 );
+    // 4
+
+    pow( 2 );
+    // 2
+
+Except this causes a problem when `y` is `0`. Anything raised to the 0th
+power is 1, but...
+
+    pow( 2, 0 );
+    // 2 <- should be 1
+
+So often we need to use the `?:` ternary instead:
+
+    function pow( x, y ) {
+        y = typeof y == 'undefined' ? 1 : y;
+        return Math.pow( x, y );
+    }
+
+    pow( 2, 0 );
+    // 1 <- correct
+
+In ES6, we can simply define the default right in the arguments, so when
+the argument is missing, it is assigned the correct value:
 
     function pow( x, y=1 ) {
         return Math.pow( x, y );
     }
+
+    pow( 2, 2 );
+    // 4
+
+    pow( 2, 0 );
+    // 1
 
 ### Spread Operator (...)
 
@@ -498,9 +561,34 @@ Class methods are now explicitly declared on the class using the
 ES6 classes also make it easier to inherit from classes. Here's our
 `Employee` class again:
 
-XXX
+    function Employee( name, salary ) {
+            Person.call( this, name ); // Superclass constructor
+            this.salary = salary;
+    }
+    // Inherit from the Person class
+    Employee.prototype = Object.create( Person.prototype );
+    // Fix the "constructor" property
+    Employee.prototype.constructor = Employee;
+
+And here's how it looks now with ES6 and the `extends` keyword:
+
+    class Employee extends Person {
+        constructor( name, salary ) {
+            super( name );             // Superclass constructor
+            this.salary = salary;
+        }
+    }
+
+No need for fiddling around with the Person prototype to ensure Employee
+gets linked correctly. No need to "fix" the constructor. We don't even
+need to explicitly refer to our Person class in our Employee
+constructor, because of a new `super` keyword.
 
 ### `super`
+
+The `super` keyword has even more use. In addition to being able to call
+our superclass's constructor, we can also call any of our superclass's
+methods as well. This is very similar to Java's `super` keyword.
 
 XXX
 
