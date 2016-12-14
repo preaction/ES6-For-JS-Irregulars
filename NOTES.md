@@ -45,7 +45,8 @@ undesired behaviors, and JSON was added to the core language.
 But the version we're going to cover here is ECMAScript 6, released in
 2015. This was a massive upgrade to the language, with a lot of new
 features that everyone should be using on a daily basis. And, with the
-help
+help of new JavaScript tools, you can use ES6 today in browsers that do
+not yet support it natively!
 
 ## Variables and Data Structures
 
@@ -731,13 +732,41 @@ Now we can be explicit about the relationship between our code files and
 the symbols within them, and we can load them in the right order
 automatically.
 
-    export default class Person {
-
+    // person.js
+    export class Person {
+        // ...
     }
 
-    exports
+    // employee.js
+    import Person from person;
+    export class Employee extends Person {
+        // ...
+    }
 
-XXX
+    // main.js
+    import * from employee; // Get everything exported by employee.js
+    let me = new Employee( "Doug" );
+
+In our main application, we only need to load our `main.js` file, and
+the other files will be loaded first, and our `Employee` object created.
+
+We can export `function`, `class`, `var`, `const`, and `let` from our
+modules.
+
+    export const PI = 3.14159;
+    export const E = 2.718;
+
+We can also build our export list using the object construction syntax:
+
+           const PI = 3.14159;
+           const E = 2.718;
+    export { "PI": PI, "E": E };
+
+Which, as mentioned previously, can be done shorter in ES6 as:
+
+           const PI = 3.14159;
+           const E = 2.718;
+    export {       PI,      E };
 
 ## Not covered
 
