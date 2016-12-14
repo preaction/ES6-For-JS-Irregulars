@@ -1,14 +1,15 @@
 
-# ES6 for JS Irregulars
+# ES6 for Occasional JavaScript Devs
 
 <http://preaction.github.io/ES6-For-JS-Irregulars/>
 
 <div style="width: 40%; float: left">
 
-by [Doug Bell](http://preaction.me)<br>
-<a href="http://twitter.com/preaction"><i class="fa fa-twitter"></i> @preaction</a><br/>
-<a href="http://github.com/preaction"><i class="fa fa-github"></i> preaction</a><br>
-[Chicago.PM](http://chicago.pm.org)<br>
+by [Doug Bell](http://preaction.me)  
+<small>(he, him, his)</small>  
+[<i class="fa fa-twitter"></i> @preaction](http://twitter.com/preaction)  
+[<i class="fa fa-github"></i> preaction](http://github.com/preaction)  
+[Chicago.PM](http://chicago.pm.org)  
 
 </div>
 <div style="width: 20%; float: left; text-align: center">
@@ -16,9 +17,11 @@ by [Doug Bell](http://preaction.me)<br>
 </div>
 <div style="width: 40%; float: left">
 
-[Source on <i class="fa fa-github"></i>](https://github.com/preaction/ES6-For-JS-Irregulars)<br/>
+[<i class="fa fa-file-text-o"></i> Notes](https://github.com/preaction/ES6-For-JS-Irregulars/blob/master/NOTES.md)  
+<small> </small>  
+[Source on <i class="fa fa-github"></i>](https://github.com/preaction/ES6-For-JS-Irregulars/)  
 
-[CC-BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/legalcode)<br/>
+[CC-BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/legalcode)  
 
 <small>
 For speaker view, press `S`<br/>
